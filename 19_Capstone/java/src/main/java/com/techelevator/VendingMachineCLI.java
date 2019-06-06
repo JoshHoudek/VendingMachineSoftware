@@ -1,6 +1,6 @@
 package com.techelevator;
 
-import com.techelevator.view.ItemQualities;
+import com.techelevator.ItemQualities;
 import com.techelevator.view.Menu;
 
 public class VendingMachineCLI {

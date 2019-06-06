@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class CashBox 
 {
-	private BigDecimal consumerBalance = new BigDecimal(0);
+	private BigDecimal consumerBalance = new BigDecimal(0).setScale(2);
 	
 	public void addConsumerBalance(BigDecimal money)
 	{
@@ -21,5 +21,8 @@ public class CashBox
 		//test me
 		//calculate change and print it
 		consumerBalance = new BigDecimal(0);
+	}
+	public BigDecimal getConsumerBalance() {
+		return consumerBalance;
 	}
 }
