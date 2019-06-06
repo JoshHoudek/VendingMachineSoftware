@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import com.techelevator.view.ItemQualities;
 import com.techelevator.view.Menu;
 
 public class VendingMachineCLI {
@@ -10,8 +11,10 @@ public class VendingMachineCLI {
 		this.menu = menu;
 	}
 	
-	public void run() {
+	public void run(ItemQualities itemQualities, ItemStock itemStock) {
 		while(true) {
+			menu.mainMenu(itemQualities, itemStock);
+			
 			
 			/*
 			 *  Display the Starting menu and get the user's choice
@@ -43,6 +46,13 @@ public class VendingMachineCLI {
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
-		cli.run();
+		
+		InventoryLoader loader = new InventoryLoader();
+		ItemQualities itemQualities = new ItemQualities();
+		ItemStock itemStock = new ItemStock();
+		loader.InventoryLoader(itemQualities, itemStock);
+		
+		cli.run(itemQualities, itemStock);
+
 	}
 }
