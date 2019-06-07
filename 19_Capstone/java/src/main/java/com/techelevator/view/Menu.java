@@ -9,6 +9,7 @@ import java.util.Scanner;
 import com.techelevator.CashBox;
 import com.techelevator.ItemQualities;
 import com.techelevator.ItemStock;
+import com.techelevator.exceptions.UnableToPurchaseException;
 
 public class Menu {
 
@@ -16,7 +17,7 @@ public class Menu {
 	private Scanner in;
 
 	public int mainMenu(ItemQualities itemQualities, ItemStock itemStock) {
-
+		
 		System.out.println("(1) Display Vending Machine Items");
 		System.out.println("(2) Purchase");
 		Scanner scanner = new Scanner(System.in);
@@ -34,8 +35,12 @@ public class Menu {
 
 			}
 		} else if (scannerStatus.equals("2")) {
-			purchaseMenu(itemQualities, itemStock);
+			purchaseMenu(itemQualities, itemStock, scanner);
 
+		}
+		else if(scannerStatus.equals("3"))
+		{
+			
 		}
 
 		itemStock.getInventory();
@@ -44,66 +49,94 @@ public class Menu {
 		return userResponse;
 	}
 
-	public void purchaseMenu (ItemQualities itemQualities, ItemStock itemStock) 
-	{
+	public void purchaseMenu(ItemQualities itemQualities, ItemStock itemStock, Scanner scanner) {
 		CashBox cashBox = new CashBox();
 		boolean stayOnPurchaseMenu = true;
-		
-		while (stayOnPurchaseMenu == true) 
-		{
-			System.out.println("(1) Feed Money");
-			System.out.println("(2) Select Product");
-			System.out.println("(3) Finish Transaction");
-			System.out.println("Current Money Provided: $" + cashBox.getConsumerBalance());
-			
-			Scanner scanner = new Scanner(System.in);
-			String scannerStatus = scanner.nextLine();
-		/////new comment
-			if (scannerStatus.equals("1")) 
-			{
-				System.out.println("How much money would you like to deposit?");
-				
-				String depositAmount = scanner.nextLine();
-				///ask experts about try catch exceptions 2mrw
-				BigDecimal depositBDAmount = new BigDecimal(depositAmount);
-				double depositDouble = depositBDAmount.doubleValue();
-				System.out.println(depositBDAmount);
-				boolean wholeNumber = depositBDAmount.equals(depositBDAmount.ROUND_DOWN);
-				System.out.println(depositBDAmount);
-				boolean positiveNumber = depositBDAmount.doubleValue() > 0;
-				
-				System.out.println(depositBDAmount.doubleValue());
-				if(depositDouble != (int)depositDouble||!positiveNumber)
-				{
-					System.out.println("not a valid amount dumbass");	
+
+		while (stayOnPurchaseMenu == true) {
+			String response = readPurchaseMenu(cashBox, scanner);
+
+			///// new comment
+			if (response.equals("1")) {
+				try {
+					depositMoney(cashBox, scanner);
+				} catch (Exception e) {
+					System.out.println("This machine only accepts 1's, 2's, 5's, and 10's");
 				}
-				else 
-				{					
-					cashBox.addConsumerBalance(depositBDAmount);
-				}
+			} else if (response.equals("2")) {
+				selectItem(cashBox, itemStock, itemQualities, scanner);
 				
-			}
-			else if (scannerStatus.equals("2")) 
-			{
-				System.out.println("Please enter the ID location of the item you want to buy");
-				String buyThisID = scanner.nextLine();
+
 				
-				////try catch to make sure id is valid********
-				if (!itemQualities.getIdMap().containsKey(buyThisID)) {
-					System.out.println("You entered an invalid key. Try again!");	
-				} else if (itemStock.getInventory().get(buyThisID) < 1){
-					System.out.println("That item is out of stock! Buy something else!");	
-				} else {
-					itemStock.deductInventory(itemStock.getInventory(), buyThisID);
-					
-					
-				}
-				
+
 			}
 		}
+
 	}
+
+	private void selectItem(CashBox cashBox, ItemStock itemStock, ItemQualities itemQualities, Scanner scanner) {
+		System.out.println("Please enter the ID location of the item you want to buy");
+		String buyThisID = scanner.nextLine();
+
+		try {
+			verifySelectItem(itemQualities, itemStock, buyThisID, cashBox);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		
+		
+	}
+
+	public void verifySelectItem(ItemQualities itemQualities, ItemStock itemStock, String buyThisID, CashBox cashBox) throws UnableToPurchaseException {
+		UnableToPurchaseException insufficient = new UnableToPurchaseException("You do not have enough money to purchase this item.");
+		UnableToPurchaseException invalidID = new UnableToPurchaseException("Please enter a valid item ID.");
+		UnableToPurchaseException outOfStock = new UnableToPurchaseException("That item is out of stock! Buy something else!");
+	//// try catch to make sure id is valid********
+			if (!itemQualities.getIdMap().containsKey(buyThisID)) {
+				throw invalidID;
+			} else if (itemStock.getInventory().get(buyThisID) < 1) {
+				throw outOfStock;
+			} else if (itemQualities.getIdMap().get(buyThisID).getPrice().compareTo(cashBox.getConsumerBalance()) > 0) {
+				throw insufficient;
+			}
+			 else {
+				itemStock.deductInventory(itemStock.getInventory(), buyThisID);
+				cashBox.deductConsumerBalance(itemQualities.getIdMap().get(buyThisID).getPrice());
+				
+			}
+		
+	}
+
+	private void depositMoney(CashBox cashBox, Scanner scanner) throws Exception {
+		System.out.println("How much money would you like to deposit?");
+		String depositAmount = scanner.nextLine();
+		try {
+			verifyDepositAmount(depositAmount);
+			cashBox.addConsumerBalance(new BigDecimal(depositAmount));
+		} catch (Exception e) {
+			throw new Exception();
+		}
+
+	}
+
+	private void verifyDepositAmount(String depositAmount) throws Exception {
+		Double doubleDeposit = Double.valueOf(depositAmount);
+		if (doubleDeposit != 1 && doubleDeposit != 2 && doubleDeposit != 5 && doubleDeposit != 10) {
+			throw new Exception();
+		}
+
+	}
+
+	private String readPurchaseMenu(CashBox cashBox, Scanner scanner) {
+		System.out.println("(1) Feed Money");
+		System.out.println("(2) Select Product");
+		System.out.println("(3) Finish Transaction");
+		System.out.println("Current Money Provided: $" + cashBox.getConsumerBalance());
+
 	
+		String scannerStatus = scanner.nextLine();
+		return scannerStatus;
+	}
 
 	public Menu(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output);

@@ -6,6 +6,7 @@ public abstract class Product
 {
 	private BigDecimal price;
 	private String productName;
+	private String message;
 	
 	public Product(BigDecimal price, String productName)
 	{
@@ -13,7 +14,11 @@ public abstract class Product
 		this.productName = productName;
 	}
 	
-	public abstract void printResponse();
+
+	public String getMessage() {
+		return message;
+	}
+
 
 	public BigDecimal getPrice() {
 		return price;

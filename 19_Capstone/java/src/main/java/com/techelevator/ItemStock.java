@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ItemStock 
 {
-	Map<String, Integer> inventory = new HashMap<>();
+	private Map<String, Integer> inventory = new HashMap<>();
 	
 	
 
