@@ -9,5 +9,7 @@ public class Drink extends Product {
 		super(price, productName);
 		// TODO Auto-generated constructor stub
 	}
-
+	public String getMessage() {
+		return message;
+	}
 }

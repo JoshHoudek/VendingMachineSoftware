@@ -19,6 +19,7 @@ public class CashBox
 	}
 	public int[] resetConsumerBalance()
 	{
+		//resets the user's balance and determines what their change will be in coins
 		int[] coins = new int[3];
 		double totalChange= this.getConsumerBalance().setScale(2, RoundingMode.HALF_UP).doubleValue() * 100;
 		totalChange = Math.round(totalChange);

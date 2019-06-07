@@ -6,9 +6,8 @@ import java.util.Map;
 public class ItemStock 
 {
 	private Map<String, Integer> inventory = new HashMap<>();
+	//inventory map uses item location ID's as the keys, and the quantity remaining of each item as the corresponding value
 	
-	
-
 	public Map<String, Integer> getInventory() {
 		return inventory;
 	}

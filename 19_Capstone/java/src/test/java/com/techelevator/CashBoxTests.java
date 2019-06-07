@@ -1,11 +1,9 @@
 package com.techelevator;
 
-import static org.junit.Assert.*;
-import org.junit.Assert;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

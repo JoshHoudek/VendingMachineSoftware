@@ -1,7 +1,5 @@
 package com.techelevator;
 
-import static org.junit.Assert.*;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -24,11 +22,12 @@ public class ItemQualitiesTests {
 		ItemStock itemStock = new ItemStock();
 		loader.InventoryLoader(itemQualities, itemStock);
 		
-		
 		Assert.assertTrue(itemQualities.idMap.containsKey("A1"));
 		Assert.assertEquals(itemQualities.idMap.get("A1").getProductName(), "Potato Crisps");
 		Assert.assertEquals(itemQualities.idMap.get("A1").getPrice(), new BigDecimal(3.05).setScale(2, RoundingMode.HALF_UP));
 		Assert.assertTrue(itemQualities.idMap.containsKey("D4"));
+		Assert.assertEquals(itemQualities.idMap.get("D4").getProductName(), "Triplemint");
+		Assert.assertEquals(itemQualities.idMap.get("D4").getPrice(), new BigDecimal(0.75).setScale(2, RoundingMode.HALF_UP));
 	}
 
 }

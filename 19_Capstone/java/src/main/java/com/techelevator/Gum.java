@@ -17,6 +17,8 @@ public class Gum extends Product {
 	public String getProductName() {
 		return super.getProductName();
 	}
-
+	public String getMessage() {
+		return message;
+	}
 
 }
